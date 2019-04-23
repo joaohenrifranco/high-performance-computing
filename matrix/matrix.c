@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define COLS_COUNT 10000
-#define ROWS_COUNT 100000
+#define COLS_COUNT 10
+#define ROWS_COUNT 10
 
 int main() {
   static int matrix[ROWS_COUNT][COLS_COUNT];
@@ -24,27 +24,53 @@ int main() {
     }
   }
 
-  for (j = 0; j < COLS_COUNT; j++) {
-    vector[j] = rand();
-  }
-
-  printf("Computing...\n");
-
-  clock_gettime(CLOCK_MONOTONIC, &start_time);  // Get start time
-
   for (i = 0; i < ROWS_COUNT; i++) {
     result[i] = 0;
+  }
+
+  for (i = 0; i < COLS_COUNT; i++) {
+    vector[i] = rand();
+  }
+
+  printf("Loop: row-col\nComputing...\n");
+
+  clock_gettime(CLOCK_MONOTONIC, &start_time);
+
+  for (i = 0; i < ROWS_COUNT; i++) {
     for (j = 0; j < COLS_COUNT; j++) {
       result[i] += matrix[i][j] * vector[j];
     }
   }
 
-  clock_gettime(CLOCK_MONOTONIC, &finish_time);  // Get end time
+  clock_gettime(CLOCK_MONOTONIC, &finish_time);
 
-  printf("Finished...\n");
+  printf("Finished!\n");
 
   elapsed_time = (finish_time.tv_sec - start_time.tv_sec);
   elapsed_time += (finish_time.tv_nsec - start_time.tv_nsec) / 1000000000.0;
 
-  printf("Total time: %lfs\n", elapsed_time);
+  printf("Total time row-col: %lfs\n", elapsed_time);
+
+  for (i = 0; i < ROWS_COUNT; i++) {
+    result[i] = 0;
+  }
+
+  printf("Loop: col-row\nComputing...\n");
+
+  clock_gettime(CLOCK_MONOTONIC, &start_time);
+
+  for (i = 0; i < COLS_COUNT; i++) {
+    for (j = 0; j < ROWS_COUNT; j++) {
+      result[j] += matrix[j][i] * vector[i];
+    }
+  }
+
+  clock_gettime(CLOCK_MONOTONIC, &finish_time);
+
+  printf("Finished!\n");
+
+  elapsed_time = (finish_time.tv_sec - start_time.tv_sec);
+  elapsed_time += (finish_time.tv_nsec - start_time.tv_nsec) / 1000000000.0;
+
+  printf("Total time col-row: %lfs\n", elapsed_time);
 }
